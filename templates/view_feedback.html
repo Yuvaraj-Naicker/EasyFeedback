@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Feedback</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+
+<h1 class="mb-4">All Submitted Feedback</h1>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-light">
+        <tr>
+            <th>Student ID</th>
+            <th>Subject</th>
+            <th>Criteria</th>
+            <th>Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for fb in feedbacks %}
+        <tr>
+            <td>{{ fb.student_id }}</td>
+            <td>{{ fb.subject }}</td>
+            <td>{{ fb.criteria }}</td>
+            <td>{{ fb.rating }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a href="/export_excel" class="btn btn-info">Download Excel</a>
+<a href="/admin" class="btn btn-secondary">Back to Admin</a>
+
+</body>
+</html>

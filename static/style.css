@@ -1,0 +1,12 @@
+.rating-select {
+    background-color: #28a745 !important;
+    color: white;
+    font-weight: bold;
+    border: none;
+    text-align: center;
+}
+
+.rating-select option {
+    background-color: white;
+    color: black;
+}
