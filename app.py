@@ -34,6 +34,10 @@ def init_db():
     )''')
     conn.commit()
     conn.close()
+@app.route('/init')
+def initialize_database():
+init_db()
+return '✅ Database initialized successfully!'
 
 # ---------- USER AUTH ----------
 @app.route('/', methods=['GET', 'POST'])
