@@ -35,10 +35,15 @@ def init_db():
     conn.commit()
     conn.close()
 
-# Ensure the database is initialized before the first request
-@app.before_first_request
+# Initialize database once before the first request
+db_initialized = False
+
+@app.before_request
 def initialize_database():
-    init_db()
+    global db_initialized
+    if not db_initialized:
+        init_db()
+        db_initialized = True
 
 # ---------- USER AUTH ----------
 @app.route('/', methods=['GET', 'POST'])
@@ -222,3 +227,4 @@ def success():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
