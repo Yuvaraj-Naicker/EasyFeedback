@@ -5,7 +5,7 @@ import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key"  # Change this to a secure random key in production
+app.secret_key = "your_secret_key"  # change to a secure key
 
 # ---------- DATABASE SETUP ----------
 def init_db():
@@ -34,16 +34,6 @@ def init_db():
     )''')
     conn.commit()
     conn.close()
-
-# Initialize database once before the first request
-db_initialized = False
-
-@app.before_request
-def initialize_database():
-    global db_initialized
-    if not db_initialized:
-        init_db()
-        db_initialized = True
 
 # ---------- USER AUTH ----------
 @app.route('/', methods=['GET', 'POST'])
@@ -133,7 +123,7 @@ def new_feedback():
     conn.close()
     return redirect('/admin')
 
-# ---------- VIEW FEEDBACK ----------
+# ---------- MODIFIED VIEW_FEEDBACK ----------
 @app.route('/view_feedback')
 def view_feedback():
     if 'user_id' not in session:
@@ -156,7 +146,7 @@ def view_feedback():
     table_data = df.to_dict(orient='records')
     return render_template('view_feedback.html', feedbacks=table_data)
 
-# ---------- EXPORT EXCEL -----------
+# ---------- EXPORT EXCEL (MODIFIED for averages) -----------
 @app.route('/export_excel')
 def export_excel():
     if 'user_id' not in session:
@@ -223,8 +213,7 @@ def feedback():
 def success():
     return render_template('success.html')
 
-
 if __name__ == "__main__":
+    init_db()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
-
