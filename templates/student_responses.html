@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Student Response</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>No. of Student's Responded: ({{ num_students }})</h1>
+    <a href="{{ url_for('admin') }}">Back to Admin</a>
+    <br><br>
+    <a href="{{ url_for('download_student_responses') }}"><button>Download as Excel</button></a>
+    <br><br>
+    <table>
+        <tr>
+            <th>Student ID</th>
+            <th>Subject</th>
+            <th>Criteria</th>
+            <th>Rating</th>
+        </tr>
+        {% for row in rows %}
+        <tr>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+            <td>{{ row[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+</html>
