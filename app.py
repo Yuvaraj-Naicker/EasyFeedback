@@ -3,7 +3,8 @@ import sqlite3
 import pandas as pd
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import io
+import xlsxwriter
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # change to a secure key
 
@@ -237,6 +238,67 @@ def feedback():
                            criteria=criteria_list)
 
 
+@app.route('/student_responses')
+def student_responses():
+    if 'user_id' not in session:
+        return redirect('/login')
+    user_id = session['user_id']
+
+    conn = sqlite3.connect('feedback.db')
+    c = conn.cursor()
+    # Each row: (student_id, subject_name, criteria, rating)
+    c.execute(
+        '''
+        SELECT student_id, subjects.name, criteria, rating
+        FROM feedback
+        JOIN subjects ON feedback.subject_id = subjects.id
+        WHERE feedback.user_id = ?
+        ORDER BY student_id, subject_id, criteria
+    ''', (user_id, ))
+    rows = c.fetchall()
+
+    # How many unique students responded?
+    c.execute(
+        '''
+        SELECT COUNT(DISTINCT student_id)
+        FROM feedback
+        WHERE user_id = ?
+    ''', (user_id, ))
+    num_students = c.fetchone()[0]
+    conn.close()
+
+    return render_template('student_responses.html',
+                           rows=rows,
+                           num_students=num_students)
+
+
+@app.route('/download_student_responses')
+def download_student_responses():
+    if 'user_id' not in session:
+        return redirect('/login')
+    user_id = session['user_id']
+
+    conn = sqlite3.connect('feedback.db')
+    df = pd.read_sql_query('''
+        SELECT student_id, subjects.name as subject, criteria, rating
+        FROM feedback
+        JOIN subjects ON feedback.subject_id = subjects.id
+        WHERE feedback.user_id = ?
+        ORDER BY student_id, subject, criteria
+    ''',
+                           conn,
+                           params=(user_id, ))
+    conn.close()
+
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Responses')
+    output.seek(0)
+    return send_file(output,
+                     download_name="student's_response.xlsx",
+                     as_attachment=True)
+
+
 @app.route('/success')
 def success():
     return render_template('success.html')
@@ -246,4 +308,3 @@ if __name__ == "__main__":
     init_db()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
-
