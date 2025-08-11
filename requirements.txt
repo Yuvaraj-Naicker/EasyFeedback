@@ -3,5 +3,4 @@ pandas
 Werkzeug
 openpyxl
 gunicorn
-xlswriter
-xlsxwriter
+XlsxWriter
