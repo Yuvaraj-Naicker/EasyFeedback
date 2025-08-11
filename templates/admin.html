@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Admin Panel</title>
@@ -12,41 +13,43 @@
         }
     </script>
 </head>
+
 <body class="container mt-5">
 
-<h1 class="mb-4">Admin Panel - Manage Subjects</h1>
-<p>Welcome, <strong>{{ session['username'] }}</strong> | 
-   <a href="/logout" class="btn btn-sm btn-outline-dark">Logout</a></p>
+    <h1 class="mb-4">Admin Panel - Manage Subjects</h1>
+    <p>Welcome, <strong>{{ session['username'] }}</strong> |
+        <a href="/logout" class="btn btn-sm btn-outline-dark">Logout</a>
+    </p>
 
-<form method="POST" class="mb-3">
-    <div class="input-group">
-        <input type="text" name="subject" class="form-control" placeholder="Enter subject name" required>
-        <button class="btn btn-primary" type="submit">Add Subject</button>
-    </div>
-</form>
+    <form method="POST" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="subject" class="form-control" placeholder="Enter subject name" required>
+            <button class="btn btn-primary" type="submit">Add Subject</button>
+        </div>
+    </form>
 
-<h3>Existing Subjects:</h3>
-<ul class="list-group mb-3">
-    {% for subject in subjects %}
+    <h3>Existing Subjects:</h3>
+    <ul class="list-group mb-3">
+        {% for subject in subjects %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
             {{ subject[1] }}
             <a href="/delete_subject/{{ subject[0] }}" class="btn btn-sm btn-danger">Delete</a>
         </li>
-    {% endfor %}
-</ul>
+        {% endfor %}
+    </ul>
 
-<a href="/feedback?user_id={{ session['user_id'] }}" 
-   class="btn btn-success" target="_blank">Go to Feedback Page</a>
+    <a href="/feedback?user_id={{ session['user_id'] }}" class="btn btn-success" target="_blank">Go to Feedback Page</a>
 
-<button class="btn btn-outline-primary" 
-        onclick="copyLink({{ session['user_id'] }})">Share Feedback Form</button>
+    <button class="btn btn-outline-primary" onclick="copyLink({{ session['user_id'] }})">Share Feedback Form</button>
 
-<a href="/view_feedback" class="btn btn-warning">View All Feedback</a>
-<a href="/export_excel" class="btn btn-info">Download Excel</a>
-<a href="/new_feedback" class="btn btn-secondary" 
-   onclick="return confirm('Start new feedback? This will delete all subjects and feedback!')">
-   Start New Feedback
-</a>
+    <a href="/view_feedback" class="btn btn-warning">View All Feedback</a>
+    <a href="/export_excel" class="btn btn-info">Download Excel</a>
+    <a href="/new_feedback" class="btn btn-secondary"
+        onclick="return confirm('Start new feedback? This will delete all subjects and feedback!')">
+        Start New Feedback
+    </a>
+    <a href="{{ url_for('student_responses') }}"><button>Student's Response</button></a>
 
 </body>
+
 </html>
