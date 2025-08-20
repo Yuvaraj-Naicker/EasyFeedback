@@ -4,3 +4,6 @@ Werkzeug
 openpyxl
 gunicorn
 XlsxWriter
+Flask
+psycopg2-binary
+SQLAlchemy
